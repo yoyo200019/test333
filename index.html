@@ -34,34 +34,61 @@
         }
         .iframe-container {
             margin-top: 100px;
-            height: calc(100vh - 100px);
+            /* height: calc(100vh - 100px); */
             overflow: hidden;
+            background-color: aqua;
+            padding-right: 10px;
         }
         iframe {
             width: 100%;
             height: 100%;
             border: none;
         }
+        .box {
+            border: 2px solid red;
+            padding-right: 10px;
+            background-color: green;
+        }
     </style>
 </head>
-<body>
+<body onload="resize();">
     <div class="button-container">
         <input type="text" id="urlInput" placeholder="請輸入網址" />
         <button onclick="openNewPage()">顯示網址內容</button>
         <button onclick="scrollIframe()">向下捲動</button>
     </div>
     <div class="iframe-container">
-        <iframe id="urlDisplay"></iframe>
+        <iframe id="urlDisplay" class="box"></iframe>
     </div>
 
+    <iframe src="https://zh.wikipedia.org/zh-tw/%E5%85%AD%E6%9C%88_(%E8%97%9D%E4%BA%BA)" name="mainframe" id="mainframe"
+        width="100%" marginwidth="0" marginheight="0" scrolling="No" frameborder="0">
+    </iframe> 
+
+
     <script>
+         function resize() {
+            console.log('real hight', document.body.scrollHeight);
+        parent.document.getElementById("mainframe").height = document.body.scrollHeight; //將子頁面高度傳到父頁面框架
+    }
         function openNewPage() {
-            const url = document.getElementById('urlInput').value;
+            console.log('open');
+            // const url = document.getElementById('urlInput').value;
+            const url = 'https://zh.wikipedia.org/zh-tw/%E5%85%AD%E6%9C%88_(%E8%97%9D%E4%BA%BA)';
             if (url) {
+                console.log('in');
                 document.getElementById('urlDisplay').src = url;
+                const iframe = document.getElementById('urlDisplay');
+                iframe.onload = function() {
+
+                    console.log('hight', iframe.contentWindow.document.body.scrollHeight);
+                    iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
+                }();
+                console.log('er', iframe.contentWindow.document.body.scrollHeight);
             } else {
                 alert('請輸入有效的網址');
             }
+            
         }
 
         function scrollIframe() {
