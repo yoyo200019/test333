@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>控制網頁</title>
+    <style>
+        body {
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+        .button-container {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            background: white;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        input {
+            display: block;
+            margin: 5px 0;
+            padding: 10px;
+            font-size: 16px;
+            width: calc(100% - 22px);
+        }
+        .iframe-container {
+            margin-top: 100px;
+            height: calc(100vh - 100px);
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <input type="text" id="urlInput" placeholder="請輸入網址" />
+        <button onclick="openNewPage()">顯示網址內容</button>
+        <button onclick="scrollIframe()">向下捲動</button>
+    </div>
+    <div class="iframe-container">
+        <iframe id="urlDisplay"></iframe>
+    </div>
+
+    <script>
+        function openNewPage() {
+            const url = document.getElementById('urlInput').value;
+            if (url) {
+                document.getElementById('urlDisplay').src = url;
+            } else {
+                alert('請輸入有效的網址');
+            }
+        }
+
+        function scrollIframe() {
+            const iframe = document.getElementById('urlDisplay');
+            const iframeWindow = iframe.contentWindow;
+            const iframeDocument = iframe.contentDocument || iframeWindow.document;
+
+            if (iframeWindow) {
+                iframeWindow.scrollBy(0, iframeWindow.innerHeight);
+            } else {
+                console.error('無法訪問 iframe 的內容窗口');
+            }
+        }
+    </script>
+</body>
+</html>
+
+
