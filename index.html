@@ -33,16 +33,7 @@
             width: calc(100% - 22px);
         }
         .iframe-container {
-            margin-top: 100px;
-            /* height: calc(100vh - 100px); */
-            overflow: hidden;
             background-color: aqua;
-            padding-right: 10px;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
         }
         .box {
             border: 2px solid red;
@@ -51,57 +42,58 @@
         }
     </style>
 </head>
-<body onload="resize();">
+<body>
     <div class="button-container">
         <input type="text" id="urlInput" placeholder="請輸入網址" />
         <button onclick="openNewPage()">顯示網址內容</button>
-        <button onclick="scrollIframe()">向下捲動</button>
+        <button onclick="scrollToTop()">置頂</button>
+        <button onclick="scrollUpButton()">向上捲動</button>
+        <button onclick="scrollDownButton()">向下捲動</button>
     </div>
     <div class="iframe-container">
-        <iframe id="urlDisplay" class="box"></iframe>
+        <iframe
+        src="https://zh.wikipedia.org/zh-tw/Wikipedia:%E9%A6%96%E9%A1%B5"
+        name="mainframe"
+        id="urlDisplay"
+        width="100%" 
+        height="20000"
+        class="box"
+        ></iframe> 
     </div>
-
-    <iframe src="https://zh.wikipedia.org/zh-tw/%E5%85%AD%E6%9C%88_(%E8%97%9D%E4%BA%BA)" name="mainframe" id="mainframe"
-        width="100%" marginwidth="0" marginheight="0" scrolling="No" frameborder="0">
-    </iframe> 
-
-
     <script>
-         function resize() {
-            console.log('real hight', document.body.scrollHeight);
-        parent.document.getElementById("mainframe").height = document.body.scrollHeight; //將子頁面高度傳到父頁面框架
-    }
+        function scrollUpButton() {
+            window.scrollBy({
+                top: -window.innerHeight, // 頁面高度
+                left: 0,
+                behavior: 'instant' // instant、smooth
+            });
+        }
+        function scrollDownButton() {
+            window.scrollBy({
+                top: window.innerHeight, // 頁面高度
+                left: 0,
+                behavior: 'instant' // instant、smooth
+            });
+        }
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                left: 0,
+                behavior: 'instant' // 平滑滚动
+            });
+        }
         function openNewPage() {
-            console.log('open');
-            // const url = document.getElementById('urlInput').value;
-            const url = 'https://zh.wikipedia.org/zh-tw/%E5%85%AD%E6%9C%88_(%E8%97%9D%E4%BA%BA)';
+            const url = document.getElementById('urlInput').value;
             if (url) {
-                console.log('in');
-                document.getElementById('urlDisplay').src = url;
-                const iframe = document.getElementById('urlDisplay');
-                iframe.onload = function() {
-
-                    console.log('hight', iframe.contentWindow.document.body.scrollHeight);
-                    iframe.style.height = iframe.contentWindow.document.body.scrollHeight + 'px';
-                }();
-                console.log('er', iframe.contentWindow.document.body.scrollHeight);
+                // 确保 URL 包含协议部分
+                const fullUrl = url.startsWith('http://') || url.startsWith('https://') ? url : 'http://' + url;
+                document.getElementById('urlDisplay').src = fullUrl;
             } else {
-                alert('請輸入有效的網址');
-            }
-            
-        }
-
-        function scrollIframe() {
-            const iframe = document.getElementById('urlDisplay');
-            const iframeWindow = iframe.contentWindow;
-            const iframeDocument = iframe.contentDocument || iframeWindow.document;
-
-            if (iframeWindow) {
-                iframeWindow.scrollBy(0, iframeWindow.innerHeight);
-            } else {
-                console.error('無法訪問 iframe 的內容窗口');
+                document.getElementById('urlDisplay').src = 'https://zh.wikipedia.org/zh-tw/Wikipedia:%E9%A6%96%E9%A1%B5'
+                // alert('請輸入有效的網址');
             }
         }
+    
     </script>
 </body>
 </html>
